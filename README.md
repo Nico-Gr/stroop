@@ -1,7 +1,6 @@
 # Stroop Test
-========
 
-An implementation of the Stroop Test including difficulty settings.
+An implementation of the Stroop Test with difficulty settings and logging capabilities.
 
 ## General information
 From the respective [Wikipedia article](https://en.wikipedia.org/wiki/Stroop_effect#Stroop_test):
@@ -13,6 +12,22 @@ The effect is named after John Ridley Stroop, who first published the effect in 
 [download](https://github.com/Til-D/stroop/archive/master.zip) the ZIP file, unzip it, install node, express, and other dependencies specified in the package.json, fire up the express server and navigate to localhost.
 
 For detailed instruction on how to install express, go to [https://expressjs.com/](https://expressjs.com/)
+
+## Stroop Tasks Settings 
+
+### in the UI:
+- number of rounds
+- duration of each round
+- stroop speed
+
+### via code parameters
+in [default.js](https://github.com/Til-D/stroop/blob/master/server/public/javascripts/default.js):
+- COLLECT_DEMOGRAPHICS: optionally, demographic information is collected
+- KEYCODE_YES: sets the match key
+- KEYCODE_NO: sets the mismatch key
+- COLORS: sets the colors and corresponding color codes (currently: 6)
+- SPEEDS: sets the speed selection
+- DURATIONS: sets the selection for the duration of each stroop task
 
 ## Author
 - [Tilman Dingler](https://github.com/Til-D/)
