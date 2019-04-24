@@ -1,0 +1,4 @@
+default:
+  app-name: 'Stroop Log Server'
+  version: 0.1
+  logDirectory: "/logs/"

@@ -1,0 +1,61 @@
+{
+  "settings": {
+    "age": "234",
+    "gender": "other",
+    "profession": "fefewef",
+    "participant_id": "testRequest",
+    "experiment_group": "1"
+  },
+  "data": {
+    "button_clicks": {
+      "1": {
+        "md": 2,
+        "pd": 2,
+        "td": 3,
+        "pe": 2,
+        "ef": 3,
+        "fr": 3
+      },
+      "2": {
+        "md": 2,
+        "pd": 3,
+        "td": 3,
+        "pe": 2,
+        "ef": 3,
+        "fr": 2
+      }
+    },
+    "tlx_value": {
+      "1": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "2": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "likert_value": {
+      "1": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "2": [
+        1,
+        1,
+        1,
+        1
+      ]
+    }
+  }
+}

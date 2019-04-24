@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Experiment: Stroop Test</title>
+		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,700">
+		<link rel="stylesheet" href="/stylesheets/jquery-ui-1.9.2.custom.min.css">
+		<link rel="stylesheet" href="/stylesheets/style.css">
+	</head>
+	<body>
+		<article>
+			<header>
+				<h1>Stroop Test</h1>
+			</header>
+			
+			<section class="setup">
+				<h2>Setup</h2>
+				<div class="cf">
+					<p>To be filled in by the experimenter.</p>
+					<section class="first">
+						<h3>Participant ID</h3>
+						
+						<input type="text" id="participant_id" required>
+							
+					</section>
+					<section class="second">
+						<h3>Stroop Settings</h3>
+						
+						<form class="list">
+							
+							<div>	
+								<label for="rounds">Number of rounds: </label>
+								<select id="rounds"></select>
+							</div>
+
+							<div>	
+								<label for="durations">Duration of each round: </label>
+								<select id="durations"></select> seconds
+							</div>
+
+							<div>
+								<label for="speed">Speed: </label>
+							    <select id="speed"></select>
+							</div>
+
+						</form>
+					</section>
+				</div>
+				
+				<div class="alert alert-warning" role="alert"></div>
+				
+				<button>Start</button>
+				
+			</section>
+
+			<section class="demographics">
+				<h2>Demographics</h2>
+				<div class="cf">
+					<h3>Welcome to the experiment!</h3>
+					<p>Please fill in the following demographic information:</p>
+					<section class="first">
+						<h3>Age</h3>
+						<input type="text" id="age" required>
+					</section>
+					<section class="second">
+						<h3>Gender</h3>
+						<form class="list">
+							<div>
+								<div>
+									<input type="radio" name="gender" id="gender_f" value="female">
+									<label for="gender_f">Female</label>
+								</div>
+								<div>
+									<input type="radio" name="gender" id="gender_m" value="male">
+									<label for="gender_m">Male</label>
+								</div>
+								<div>
+									<input type="radio" name="gender" id="gender_o" value="other">
+									<label for="gender_o">Other</label>
+								</div>
+								<div>
+									<input type="radio" name="gender" id="gender_x" value="none">
+									<label for="gender_x">I'd rather not say</label>
+								</div>
+							</div>
+						</form>
+					</section>
+					<section class="third">
+						<h3>Profession &amp; Background</h3>
+						<input type="text" id="profession" required>
+					</section>
+				</div>
+				<div class="alert alert-warning" role="alert"></div>
+				<button>Next</button>
+			</section>
+
+			<section class="instructions">
+				<h2>Instructions</h2>
+				<p>
+					The Stroop Task is a psychological experiment named after John Ridley Stroop. The Stroop phenomenon demonstrates the difficulty of matching the ink color of a color word if there is a mismatch between ink color and word. For example, the word GREEN printed in red ink.
+				</p>
+				<p>
+					In the following tasks, you will see colored words (like <span style="color: green">GREEN</span>, or <span style="color: red">BLUE</span>). You need to respond to the color of the words (not the meaning) by pressing the key <b>'f'</b> if the color and word match and the key <b>'j'</b> if there is a mismatch:
+					<ul>
+						<li><b>Match ('f')</b>: The color of the word and the meaning is the same (e.g., <span style="color: green">GREEN</span>)</li>
+						<li><b>Mismatch ('j')</b>: The color of the word and the meaning is not the same (e.g., <span style="color: red">GREEN</span>)</li>
+					</ul>
+				</p>
+				<p>Get it? Got it? Go!</p>
+				<button>Start</button>
+			</section>
+
+			<section class="break">
+				<h2>Take a break!</h2>
+				<p>
+					Good job! <span id="rounds_left"></span> Once you are ready, please press 'Start'.
+				</p>
+				<button>Start</button>
+			</section>
+
+			<section class="stroop">
+				
+				<p id="counter"></p>
+				<div id="progressbar"></div>
+				<p id="text_canvas"></p>
+
+			</section>
+
+			<section class="thanks">
+				<h2>That's it!</h2>
+				<h4>Thanks for your participation! Here are your results:</h4>
+				<p id="results"></p>
+				<div class="alert alert-warning" role="alert"></div>
+			</section>
+
+		</article>
+		<script src="/javascripts/jquery-1.8.3.min.js"></script>
+		<script src="/javascripts/jquery-ui-1.9.2.custom.min.js"></script>
+		<script src="/javascripts/jquery-ui.js"></script>
+		<script src="/javascripts/default.js"></script>
+	</body>
+</html>
