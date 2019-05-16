@@ -1,10 +1,14 @@
-#!/usr/bin/env node
+const {electron, app, BrowserWindow, protocol, Menu} = require('electron')
+const path = require('path')
+const url = require('url')
+
+let mainWindow
 
 /**
  * Module dependencies.
  */
 
-var app = require('../app');
+var nodeapp = require('../app');
 var debug = require('debug')('server:server');
 var http = require('http');
 
@@ -13,13 +17,13 @@ var http = require('http');
  */
 
 var port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+nodeapp.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+var server = http.createServer(nodeapp);
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -88,3 +92,85 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+
+
+
+
+
+
+function createWindow () {
+  const {screen} = require('electron')
+  const {width, height} = screen.getPrimaryDisplay().workAreaSize
+  mainWindow = new BrowserWindow({
+    useContentSize: true,
+    left: 0,
+    top: 0,
+    width: width,
+    height: height,
+	fullscreen: true
+  })
+  mainWindow.loadURL('http://localhost:3000/')
+
+  mainWindow.on('closed', function () {
+    mainWindow = null
+  })
+}
+
+function createMenu () {
+  const template = [
+    {
+      label: 'Menü',
+      submenu: [
+        {role: 'reload'},
+        {role: 'forcereload'},
+        {role: 'toggledevtools'},
+      ]
+    },
+	{
+		label:	'Schließen',
+		role:	'close'
+	}
+  ]
+
+  if (process.platform === 'darwin') {
+    template.unshift({
+      label: app.getName(),
+      submenu: [
+        {role: 'about'},
+        {type: 'separator'},
+        {role: 'hide'},
+        {role: 'hideothers'},
+        {role: 'unhide'},
+        {type: 'separator'},
+        {role: 'quit'}
+      ]
+    })
+  }
+
+  const menu = Menu.buildFromTemplate(template)
+  Menu.setApplicationMenu(menu)
+}
+
+app.on('ready', function () {
+  protocol.interceptFileProtocol('file', (req, callback) => {
+    const requestedUrl = req.url.substr(7)
+
+    if (path.isAbsolute(requestedUrl)) {
+      callback(path.normalize(path.join(__dirname, requestedUrl)))
+    } else {
+      callback(requestedUrl)
+    }
+  })
+})
+
+app.on('ready', function () {
+  createMenu()
+  createWindow()
+})
+
+app.on('window-all-closed', function () {
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
+})
