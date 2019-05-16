@@ -4,7 +4,8 @@ var express = require('express'),
 	yaml = require('yaml-config');
 
 var settings = yaml.readConfig(__dirname + '/../config/server-config.yml'),
-    LOGDIRECTORY = __dirname + '/../' + settings.logDirectory,
+	LOGDIRECTORY = require('os').homedir() + "/stroop-logs/";
+    //LOGDIRECTORY = __dirname + '/../' + settings.logDirectory,
     LOGFILEEXTENSION = '.log',
     OKRESPONSE = {'status': 'ok'};
     FORMATERROR = {'status': 'error', 'info': 'malformed json request'};
