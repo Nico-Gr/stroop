@@ -18,29 +18,31 @@ $(document).ready(function() {
 	const PROGRESS_FRAMERATE = 100; 				// ms
 	const KEYCODE_YES = 102;						// f
 	const KEYCODE_NO = 106;							// j
-
+	const TIME_TO_WAIT = 17000;						//time between rounds in ms, minus 3 seconds for the countdown screen
+	
+	// Farben in deutsch
 	const COLORS = [
-			['black', '#000000'],
-			['red', '#ff0000'],
-			['blue', '#3333ff'],
-			['green', '#009933'],
+			['schwarz', '#000000'],
+			['rot', '#ff0000'],
+			['blau', '#3333ff'],
+			['grün', '#009933'],
 			['orange', '#ff9900'],
-			['yellow', '#ffff00']
+			['gelb', '#ffff00']
 	];
-	const SPEEDS = [							// ms
-			['slower', 3000],
-			['slow', 2000],
-			['medium', 1000, 'default'],
-			['fast', 750],
-			['faster', 500]
+
+	const SPEEDS = [
+			['A', 'A, 1200, 1000, 700, 850'],
+			['B', 'B, 850, 1200, 700, 1000'],
+			['C', 'C, 850, 700, 1000, 1200'],
+			['D', 'D, 700, 1200, 850, 1000']
 	];
+
 	const DURATIONS = [							// [sec, ms]
 		[10, 10*SECOND],
 		[20, 20*SECOND],
 		[30, 30*SECOND, 'default'],
 		[45, 45*SECOND],
 		[60, 60*SECOND]
-
 	];
 
 	var settings = {},
@@ -50,8 +52,16 @@ $(document).ready(function() {
 		current_color_item = [],
 		progressbar_timer = {},
 		stroop_in_progress = false,
-		response_given = false,					// ensures that only first reponse is logged
+		response_given = false,					// ensures that only first response is logged
 		results = {
+			'hits': 0,
+			'false_positives': 0,
+			'false_negatives': 0,
+			'missed': 0,
+			'congruent_rts': [],						// array for collecting reaction times for congruent items (hits only)
+			'incongruent_rts': []					// array for collecting reaction times for incongruent items (hits only)
+		},
+		results_summary = {
 			'hits': 0,
 			'false_positives': 0,
 			'false_negatives': 0,
@@ -64,7 +74,6 @@ $(document).ready(function() {
 	/* INIT */
 
 	$('#participant_id').focus();
-
 	//init speed dropdown from const SPEED (default = preselected)
 	for (var i = 0; i < SPEEDS.length; i++) { 
 		var item = SPEEDS[i];
@@ -76,10 +85,9 @@ $(document).ready(function() {
 	  	$('#speed').append($('<option>', item));
 	}
 
-	for (var i = 1; i <= MAX_ROUNDS; i++) {
-		$('#rounds').append($('<option>', {value: i, text: i}));
-	}
+	$('#rounds').append($('<option>', {value: 4, text: '4'}));
 
+	
 	for (var i = 0; i < DURATIONS.length; i++) {
 		var item = DURATIONS[i];
 		if(item.length > 2 && item[2]=='default') {
@@ -123,8 +131,13 @@ $(document).ready(function() {
 		return Math.round(input * 100) / 100
 	}
 
+	
+	
 	function create_data_log(status) {
 
+		var allspeeds = $("#speed").val();
+		var speed_splitted = allspeeds.split(",");
+		settings['variant'] = speed_splitted[0];
 		return {
 			'settings': settings,
 			'data': results,
@@ -134,8 +147,9 @@ $(document).ready(function() {
 	}
 
 	function log_partial_data() {
-
+		
 		data = create_data_log(STATUS_INCOMPLETE);
+		console.log(data);
 
 		$.ajax ({
 	        type: "POST",
@@ -163,8 +177,6 @@ $(document).ready(function() {
 	        contentType: "application/json",
 	        data: JSON.stringify(data),
 	        success: function (result,status,xhr) {
-	        	// console.log(status);
-	        	// console.log(result);
 	        	if(result.status == 'ok') {
 	        		$(".alert").html('<h4>Success:</h4><p>Your data has been saved.</p>');
 	     			$(".alert").show();
@@ -182,6 +194,7 @@ $(document).ready(function() {
 	        }
 	    });
 	}
+	
 
 	function init_stroop() {
 
@@ -214,14 +227,47 @@ $(document).ready(function() {
 			color_pack.push(item_incongruent);
 
 		}
+		
+		// randomize the congruent and incongruent items
 		color_pack = shuffle(color_pack);
 
-		// console.log('stroop duration: ' + settings.duration);
-		// console.log('stroop speed: ' + settings.speed);
-		// console.log('combination count: ' + combination_count);
-		// console.log('color pack: ');
-		// console.log(color_pack);
+		// shuffle as long as there are no duplicate items directly after each other
+		var time_before_shuffle = Date.now();
+		var duplicate_found = true;
+		while (duplicate_found) {
+			duplicate_found = false;
+			for (var i=0; i<color_pack.length-1; i++) {
+				if ((color_pack[i][0] == color_pack[i+1][0]) && (color_pack[i][1] == color_pack[i+1][1])) {
+					color_pack = shuffle(color_pack);
+					duplicate_found = true;
+					i = color_pack.length;
+					console.log("reshuffle!");
+				}
+			}
+		}
+		var time_lost = Date.now() - time_before_shuffle;
+		console.log("time lost due to reshuffle: " + time_lost.toString() + " ms");
+		 
+		
+		
+			function shuffle(array) {
+		var top = array.length,
+			tmp, current;
 
+		if(top) {
+			while(--top) {
+				current = Math.floor(Math.random() * (top + 1));
+				tmp = array[current];
+				array[current] = array[top];
+				array[top] = tmp;
+			}
+		}
+
+		return array;
+	}
+		
+		
+		
 		countdown(COUNTDOWN);
 
 	}
@@ -249,9 +295,6 @@ $(document).ready(function() {
 			canvas.html(current_color_item[0]);
 
 			var decrement = 100 / (settings.speed / PROGRESS_FRAMERATE);
-			// console.log('stroop speed: ' + settings.speed);
-			// console.log('progress framerate: ' + PROGRESS_FRAMERATE);
-			// console.log('decrement: ' + decrement);
 
 			$('#progressbar').show();
 			$('#progressbar').css('width', '100%');
@@ -273,6 +316,7 @@ $(document).ready(function() {
 
 			// console.log("RESULTS:");
 			console.log(results);
+			console.log(results_summary);
 
 			if(current_round<settings.rounds) {
 				// init next round
@@ -280,25 +324,62 @@ $(document).ready(function() {
 				// log partial results
 				settings['current_round'] = current_round;
 				log_partial_data();
-
+				
 				var rounds_left = parseInt(settings.rounds)-current_round;
 				current_round++;
+				console.log(current_round);
+				var allspeeds = $("#speed").val();
+				var speed_splitted = allspeeds.split(",");
+				if (current_round == 2) {
+					settings['speed'] = parseInt(speed_splitted[2]);				
+				}
+				if (current_round == 3) {
+					settings['speed'] = parseInt(speed_splitted[3]);				
+				}
+				if (current_round == 4) {
+					settings['speed'] = parseInt(speed_splitted[4]);				
+				}
 				
 				// console.log('round done');
-				if(rounds_left>1) {
-					$('#rounds_left').html('You have ' + rounds_left + ' rounds left.');
-				} else {
-					$('#rounds_left').html('You have one round left. Almost there.');
-				}
+				$('#rounds_left').html('Eine kleine Pause von ' + ((TIME_TO_WAIT/1000)+3) + ' Sekunden, dann geht es weiter.');
+
 
 				$('.break').show();
+				
+				results_summary['hits'] = results_summary['hits'] + results['hits'];
+				results_summary['false_negatives'] = results_summary['false_negatives'] + results['false_negatives'];
+				results_summary['false_positives'] = results_summary['false_positives'] + results['false_positives'];
+				results_summary['missed'] = results_summary['missed'] + results['missed'];	
+				results['hits'] = 0;
+				results['false_negatives'] = 0;
+				results['false_positives'] = 0;
+				results['congruent_rts'] = [];			
+				results['incongruent_rts'] = [];
+				results['missed'] = 0;
+				document.querySelector("#breakbutton").style.visibility = "hidden";
+				setTimeout(function(){
+					$(".alert").hide();
+					$(".break").hide();
+					$(".stroop").show();
+					init_stroop();}
+					, TIME_TO_WAIT);
 				
 			} else {
 				// finished
 				// console.log('finished');
 
-				// log final results
+				// log partial results for the last round
 				settings['current_round'] = current_round;
+				log_partial_data();
+				
+				results_summary['hits'] = results_summary['hits'] + results['hits'];
+				results_summary['false_negatives'] = results_summary['false_negatives'] + results['false_negatives'];
+				results_summary['false_positives'] = results_summary['false_positives'] + results['false_positives'];
+				results_summary['missed'] = results_summary['missed'] + results['missed'];	
+				results = results_summary;
+				// log final results
+				settings['speed'] = 'summary';
+				settings['current_round'] = 'summary';
 				log_final_results();
 
 				var resultstring = '<ul><li>Hits: ' + results['hits'] + '</li><li>False Positives: ' + results['false_positives'] + '</li><li>False Negatives: ' + results['false_negatives'] + '</li><li>Missed: ' + results['missed'] + '</li>';
@@ -321,7 +402,7 @@ $(document).ready(function() {
 	function countdown(count) {
 
 		var node = $('#counter');
-		var txt = "Starting in <br />" + count;
+		var txt = "Beginnt in <br />" + count;
 
 		// console.log('-countdown(' + count + ')');
 
@@ -346,6 +427,10 @@ $(document).ready(function() {
 	/* hide future steps */
 
 	$(".demographics, .instructions, .stroop, .break, .thanks, .alert").hide();
+	document.getElementById("divrounds").style.display = "none";
+	document.getElementById("divdurations").style.display = "none";
+	var myDivSpeed = document.getElementById("divspeedlabel");
+	myDivSpeed.innerHTML = "Variante";
 
 	/* STROOP SETUP */
 
@@ -357,7 +442,10 @@ $(document).ready(function() {
 			settings['participant_id'] = 'unspecified';
 		}
 		settings['rounds'] = $("#rounds").val();
-		settings['speed'] = $("#speed").val();
+		
+		var allspeeds = $("#speed").val();
+		var speed_splitted = allspeeds.split(",");
+		settings['speed'] = parseInt(speed_splitted[1]);	
 		settings['duration'] = $("#durations").val();
 
 		if (ENFORCE_USER_INPUT && (settings['participant_id'] == "unspecified")) {
@@ -440,6 +528,7 @@ $(document).ready(function() {
 				if(current_color_item[2]) {
 					console.log('YES: correct');
 					results['congruent_rts'].push(Date.now() - start_time);
+					results_summary['congruent_rts'].push(Date.now() - start_time);
 					results['hits']++;
 				} else {
 					console.log('YES: wrong');
@@ -450,6 +539,7 @@ $(document).ready(function() {
 				if(current_color_item.length>2 && !current_color_item[2]) {
 					console.log('NO: correct');
 					results['incongruent_rts'].push(Date.now() - start_time);
+					results_summary['incongruent_rts'].push(Date.now() - start_time);
 					results['hits']++;
 				} else {
 					console.log('NO: wrong');
