@@ -18,8 +18,9 @@ var app = express();
 fs.exists(CONFIG_FILE, function(exists) {
     if (exists) {
         var settings = yaml.readConfig(CONFIG_FILE),
-        	logs = __dirname + settings.logDirectory;
-
+        	//logs = __dirname + settings.logDirectory;
+			logs = require('os').homedir() + "/stroop-logs/";
+		console.log(logs);
         console.log('Server settings:');
         console.log(settings);
 
