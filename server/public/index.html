@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
 	<head>
 		<meta charset="utf-8">
 		<title>Experiment: Stroop Test</title>
@@ -10,36 +10,36 @@
 	<body>
 		<article>
 			<header>
-				<h1>Stroop Test</h1>
+				<h1>Stroop-Test</h1>
 			</header>
 			
 			<section class="setup">
 				<h2>Setup</h2>
 				<div class="cf">
-					<p>To be filled in by the experimenter.</p>
+					<p>Vom Experimentator auszufüllen.</p>
 					<section class="first">
-						<h3>Participant ID</h3>
+						<h3>Teilnehmer-ID</h3>
 						
 						<input type="text" id="participant_id" required>
 							
 					</section>
 					<section class="second">
-						<h3>Stroop Settings</h3>
+						<h3>Stroop-Einstellungen</h3>
 						
 						<form class="list">
 							
-							<div>	
-								<label for="rounds">Number of rounds: </label>
+							<div id="divrounds">	
+								<label for="rounds">Anzahl der Runden: </label>
 								<select id="rounds"></select>
 							</div>
 
-							<div>	
-								<label for="durations">Duration of each round: </label>
-								<select id="durations"></select> seconds
+							<div id="divdurations">	
+								<label for="durations">Dauer jeder Runde: </label>
+								<select id="durations"></select> Sekunden
 							</div>
 
-							<div>
-								<label for="speed">Speed: </label>
+							<div id="divspeed">
+								<label for="speed" id="divspeedlabel">Geschwindigkeit: </label>
 							    <select id="speed"></select>
 							</div>
 
@@ -95,27 +95,37 @@
 			</section>
 
 			<section class="instructions">
-				<h2>Instructions</h2>
+				<h2>Anweisungen</h2>
 				<p>
-					The Stroop Task is a psychological experiment named after John Ridley Stroop. The Stroop phenomenon demonstrates the difficulty of matching the ink color of a color word if there is a mismatch between ink color and word. For example, the word GREEN printed in red ink.
+					Der Stroop-Test ist ein psychologisches Experiment, benannt nach John Ridley Stroop. Das Stroop-Phäneomen zeigt die Schwierigkeit die Farbe eines Farb-Wortes mit dessen Bedeutung zu verbinden, wenn Wort und Farbe nicht übereinstimmen, z.B. wenn das Word GRÜN mit roter Farbe geschrieben wird.
 				</p>
 				<p>
-					In the following tasks, you will see colored words (like <span style="color: green">GREEN</span>, or <span style="color: red">BLUE</span>). You need to respond to the color of the words (not the meaning) by pressing the key <b>'f'</b> if the color and word match and the key <b>'j'</b> if there is a mismatch:
+					Bei der folgenden Aufgabe wirst du farbige Worte sehen (wie <span style="color: green">GRÜN</span> oder <span style="color: red">BLAU</span>). Du musst auf die Farbe des Wortes reagieren. Wenn Farbe und Bedeutung übereinstimmen drücke <b>'f'</b>, falls Farbe und Bedeutung nicht übereinstimmen drücke <b>'j'</b>.:
 					<ul>
-						<li><b>Match ('f')</b>: The color of the word and the meaning is the same (e.g., <span style="color: green">GREEN</span>)</li>
-						<li><b>Mismatch ('j')</b>: The color of the word and the meaning is not the same (e.g., <span style="color: red">GREEN</span>)</li>
+						<li><b>Passt ('f')</b>: Die Farbe und Bedeutung des Wortes sind gleich (z.B., <span style="color: green">GRÜN</span>)</li>
+						<li><b>Passt nicht ('j')</b>: Die Farbe und Bedeutung des Wortes sind nicht gleich (z.B., <span style="color: red">GRÜN</span>)</li>
 					</ul>
 				</p>
-				<p>Get it? Got it? Go!</p>
+				<p>
+				Die möglichen Farben sind:
+					<ul>
+						<li><span style="color: #3333ff; font-weight: bold; font-size: large">BLAU</span></li>
+						<li><span style="color: #ffff00; font-weight: bold; font-size: large">GELB</span></li>
+						<li><span style="color: #009933; font-weight: bold; font-size: large">GRÜN</span></li>
+						<li><span style="color: #ff9900; font-weight: bold; font-size: large">ORANGE</span></li>
+						<li><span style="color: #ff0000; font-weight: bold; font-size: large">ROT</span></li>
+						<li><span style="color: #000000; font-weight: bold; font-size: large">SCHWARZ</span></li>
+				</p>
+				<p>Verstanden? Verstanden? Los!</p>
 				<button>Start</button>
 			</section>
 
 			<section class="break">
-				<h2>Take a break!</h2>
+				<h2>Mach eine Pause!</h2>
 				<p>
-					Good job! <span id="rounds_left"></span> Once you are ready, please press 'Start'.
+					Gute Arbeit! <span id="rounds_left"></span>
 				</p>
-				<button>Start</button>
+				<button id="breakbutton">Start</button>
 			</section>
 
 			<section class="stroop">
@@ -127,8 +137,8 @@
 			</section>
 
 			<section class="thanks">
-				<h2>That's it!</h2>
-				<h4>Thanks for your participation! Here are your results:</h4>
+				<h2>Das war's!</h2>
+				<h4>Danke für die Teilnahme, hier sind die Ergebnisse:</h4>
 				<p id="results"></p>
 				<div class="alert alert-warning" role="alert"></div>
 			</section>
