@@ -19,6 +19,7 @@ $(document).ready(function() {
 	const KEYCODE_YES = 102;						// f
 	const KEYCODE_NO = 106;							// j
 	const TIME_TO_WAIT = 17000;						//time between rounds in ms, minus 3 seconds for the countdown screen
+	const ROUND_DURATION = 30000;				// duration of one round
 
 	// Farben in deutsch
 	const COLORS = [
@@ -35,14 +36,6 @@ $(document).ready(function() {
 			['B', 'B, 850, 1200, 700, 1000'],
 			['C', 'C, 850, 700, 1000, 1200'],
 			['D', 'D, 700, 1200, 850, 1000']
-	];
-
-	const DURATIONS = [							// [sec, ms]
-		[10, 10*SECOND],
-		[20, 20*SECOND],
-		[30, 30*SECOND, 'default'],
-		[45, 45*SECOND],
-		[60, 60*SECOND]
 	];
 
 	var settings = {},
@@ -63,12 +56,13 @@ $(document).ready(function() {
 		},
 		start_time;
 
-	var results_summary = results;	// array for the mean results of all rounds
-	
+	var results_summary = JSON.parse(JSON.stringify(results));	// array for the mean results of all rounds
+	var allspeeds = ''; // string of all the available round speeds
+
 	/* INIT */
 
 	$('#participant_id').focus();
-	//init speed dropdown from const SPEED (default = preselected)
+	//init variant dropdown from const SPEED (default = preselected)
 	for (var i = 0; i < SPEEDS.length; i++) {
 		var item = SPEEDS[i];
 		if(item.length > 2 && item[2]=='default') {
@@ -79,18 +73,6 @@ $(document).ready(function() {
 	  	$('#speed').append($('<option>', item));
 	}
 
-	$('#rounds').append($('<option>', {value: 4, text: '4'}));
-
-
-	for (var i = 0; i < DURATIONS.length; i++) {
-		var item = DURATIONS[i];
-		if(item.length > 2 && item[2]=='default') {
-			item = {value: DURATIONS[i][1], text: DURATIONS[i][0], selected: 'selected'}
-		} else {
-			item = {value: DURATIONS[i][1], text: DURATIONS[i][0]}
-		}
-		$('#durations').append($('<option>', item));
-	}
 
 	/* functions */
 
@@ -128,10 +110,7 @@ $(document).ready(function() {
 
 
 	function create_data_log(status) {
-
-		var allspeeds = $("#speed").val();
-		var speed_splitted = allspeeds.split(",");
-		settings['variant'] = speed_splitted[0];
+		settings['variant'] = allspeeds.split(",")[0];
 		return {
 			'settings': settings,
 			'data': results,
@@ -311,22 +290,25 @@ $(document).ready(function() {
 			// console.log("RESULTS:");
 			console.log(results);
 			console.log(results_summary);
+			// log partial results
+			settings['current_round'] = current_round;
+			log_partial_data();
+			results_summary['hits'] = results_summary['hits'] + results['hits'];
+			results_summary['false_negatives'] = results_summary['false_negatives'] + results['false_negatives'];
+			results_summary['false_positives'] = results_summary['false_positives'] + results['false_positives'];
+			results_summary['missed'] = results_summary['missed'] + results['missed'];
 
 			if(current_round<settings.rounds) {
 				// init next round
 
-				// log partial results
-				settings['current_round'] = current_round;
-				log_partial_data();
+
 
 				var rounds_left = parseInt(settings.rounds)-current_round;
 				current_round++;
 				console.log(current_round);
 
 				// set speed for the current round
-				var allspeeds = $("#speed").val();
-				var speed_splitted = allspeeds.split(",");
-				settings['speed'] = parseInt(speed_splitted[current_round]);
+				settings['speed'] = parseInt(allspeeds.split(",")[current_round]);
 
 				// console.log('round done');
 				$('#rounds_left').html('Eine kleine Pause von ' + ((TIME_TO_WAIT/1000)+3) + ' Sekunden, dann geht es weiter.');
@@ -334,10 +316,6 @@ $(document).ready(function() {
 
 				$('.break').show();
 
-				results_summary['hits'] = results_summary['hits'] + results['hits'];
-				results_summary['false_negatives'] = results_summary['false_negatives'] + results['false_negatives'];
-				results_summary['false_positives'] = results_summary['false_positives'] + results['false_positives'];
-				results_summary['missed'] = results_summary['missed'] + results['missed'];
 				results['hits'] = 0;
 				results['false_negatives'] = 0;
 				results['false_positives'] = 0;
@@ -355,16 +333,10 @@ $(document).ready(function() {
 			} else {
 				// finished
 				// console.log('finished');
-
-				// log partial results for the last round
-				settings['current_round'] = current_round;
-				log_partial_data();
-
-				results_summary['hits'] = results_summary['hits'] + results['hits'];
-				results_summary['false_negatives'] = results_summary['false_negatives'] + results['false_negatives'];
-				results_summary['false_positives'] = results_summary['false_positives'] + results['false_positives'];
-				results_summary['missed'] = results_summary['missed'] + results['missed'];
+				console.log(results);
+				console.log(results_summary);
 				results = results_summary;
+				console.log(results);
 				// log final results
 				settings['speed'] = 'summary';
 				settings['current_round'] = 'summary';
@@ -429,12 +401,13 @@ $(document).ready(function() {
 		} else {
 			settings['participant_id'] = 'unspecified';
 		}
-		settings['rounds'] = $("#rounds").val();
 
-		var allspeeds = $("#speed").val();
-		var speed_splitted = allspeeds.split(",");
-		settings['speed'] = parseInt(speed_splitted[1]);
-		settings['duration'] = $("#durations").val();
+		allspeeds = $("#speed").val();
+		settings['speed'] = parseInt(allspeeds.split(",")[1]);
+		settings['duration'] = ROUND_DURATION;
+		settings['rounds'] = allspeeds.split(",").length-1;
+		//settings['rounds'] = $("#rounds").val();
+		//settings['duration'] = $("#durations").val();
 
 		if (ENFORCE_USER_INPUT && (settings['participant_id'] == "unspecified")) {
 		     // do something
