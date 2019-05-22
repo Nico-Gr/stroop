@@ -102,8 +102,6 @@ router.post('/', function(req, res, next) {
 
 				fs.exists(logfile_nojson, function(exists) {
 				  	var line_header_nojson = 'participant_id;speed;duration;rounds;current_round;variant;hits;false_positives;false_negatives;missed;congruent_mean;incongruent_mean;congruent_rts;incongruent_rts;status;time;timestamp' +	NEWLINE;
-						var	congruent_mean = Math.twodec(Math.avg(req.body['data']['congruent_rts']));
-						var	incongruent_mean = Math.twodec(Math.avg(req.body['data']['incongruent_rts']));
 						var datum = new Date();
 						var line_nojson =
 															req.body['settings']['participant_id'] + ';' +
@@ -116,8 +114,8 @@ router.post('/', function(req, res, next) {
 															req.body['data']['false_positives'] + ';' +
 															req.body['data']['false_negatives'] + ';' +
 															req.body['data']['missed'] + ';' +
-															congruent_mean + ';' +
-															incongruent_mean + ';' +
+															Math.twodec(Math.avg(req.body['data']['congruent_rts'])) + ';' +
+															Math.twodec(Math.avg(req.body['data']['incongruent_rts'])) + ';' +
 															req.body['data']['congruent_rts'] + ';' +
 															req.body['data']['incongruent_rts'] + ';' +
 															req.body['status'] + ';' +
