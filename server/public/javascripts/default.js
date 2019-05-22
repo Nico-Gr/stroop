@@ -5,7 +5,7 @@ $(document).ready(function() {
 	// [ ] prevent same subsequent color pairs
 
 	/* constants & variables */
-	const VERSION = '1.0'; 						// to keep track of changes affecting log file format
+	const VERSION = '1.1'; 						// to keep track of changes affecting log file format
 	const DEBUG = false;
 
 	const STATUS_COMPLETE = 'complete';			// indicates complete dataset on server
@@ -172,11 +172,9 @@ $(document).ready(function() {
 	function init_stroop() {
 
 		// console.log('--init_stroop()');
-
 		$('#progressbar').hide();
 		color_index = 0;
 		color_pack = [];
-
 		// calculate number of stroop combinations, make sure it's even
 		var combination_count = Math.trunc(settings.duration / settings.speed);
 		if(combination_count % 2 == 1) {
