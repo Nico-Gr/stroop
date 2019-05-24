@@ -99,7 +99,7 @@ function onListening() {
 
 
 
-function createWindow () {
+/*function createWindow () {
   const {screen} = require('electron')
   const {width, height} = screen.getPrimaryDisplay().workAreaSize
   mainWindow = new BrowserWindow({
@@ -115,6 +115,37 @@ function createWindow () {
   mainWindow.on('closed', function () {
     mainWindow = null
   })
+}
+*/
+
+function createWindow () {
+  const {screen} = require('electron')
+
+  const displays = screen.getAllDisplays()
+  var externalDisplay = null
+  for (const d of displays) {
+    if (d.bounds.x !== 0 || d.bounds.y !== 0) {
+      externalDisplay = d
+    }
+  }
+  if (externalDisplay) {
+    mainWindow = new BrowserWindow({
+      x: externalDisplay.bounds.x,
+      y: externalDisplay.bounds.y,
+      width: externalDisplay.workAreaSize.width,
+      height: externalDisplay.workAreaSize.height
+    })
+  } else {
+    const {width, height} = screen.getPrimaryDisplay().workAreaSize
+    mainWindow = new BrowserWindow({
+      useContentSize: true,
+      left: 0,
+      top: 0,
+      width: width,
+      height: height,
+      fullscreen: true
+    })
+  }
 }
 
 function createMenu () {
