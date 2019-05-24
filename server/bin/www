@@ -133,7 +133,8 @@ function createWindow () {
       x: externalDisplay.bounds.x,
       y: externalDisplay.bounds.y,
       width: externalDisplay.workAreaSize.width,
-      height: externalDisplay.workAreaSize.height
+      height: externalDisplay.workAreaSize.height,
+      fullscreen: true
     })
   } else {
     const {width, height} = screen.getPrimaryDisplay().workAreaSize
@@ -146,6 +147,10 @@ function createWindow () {
       fullscreen: true
     })
   }
+  mainWindow.loadURL('http://localhost:3000/')
+  mainWindow.on('closed', function () {
+    mainWindow = null
+  })
 }
 
 function createMenu () {

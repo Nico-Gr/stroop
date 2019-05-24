@@ -1,6 +1,6 @@
 {
   "name": "stroop",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "private": true,
   "scripts": {
     "start": "electron ./bin/www",
