@@ -28,7 +28,7 @@ $(document).ready(function() {
 			['blau', '#3333ff'],
 			['grün', '#009933'],
 			['orange', '#ff9900'],
-			['gelb', '#ffff00']
+			['gelb', '#ffdd00']
 	];
 
 	const SPEEDS = [
@@ -151,7 +151,7 @@ $(document).ready(function() {
 	        data: JSON.stringify(data),
 	        success: function (result,status,xhr) {
 	        	if(result.status == 'ok') {
-	        		$(".alert").html('<h4>Success:</h4><p>Your data has been saved.</p>');
+	        		$(".alert").html('<h4>Erfolg:</h4><p>Daten gespeichert.</p>');
 	     			$(".alert").show();
 	        	} else {
 	        		$(".alert").html('<h3>There seems to be a problem with the log server!</h3><p>Please manually save the following data objects:</p><h4>Settings:</h4><p>' + JSON.stringify(settings) + '</p><h4>Data</h4>' + JSON.stringify(data) + '</p>');
@@ -167,6 +167,7 @@ $(document).ready(function() {
 	        }
 	    });
 	}
+
 
 
 	function init_stroop() {
@@ -340,13 +341,13 @@ $(document).ready(function() {
 				settings['current_round'] = 'summary';
 				log_final_results();
 
-				var resultstring = '<ul><li>Hits: ' + results['hits'] + '</li><li>False Positives: ' + results['false_positives'] + '</li><li>False Negatives: ' + results['false_negatives'] + '</li><li>Missed: ' + results['missed'] + '</li>';
+				var resultstring = '<ul><li>Richtig: ' + results['hits'] + '</li><li>Falsch positiv: ' + results['false_positives'] + '</li><li>Falsch negativ: ' + results['false_negatives'] + '</li><li>Verpasst: ' + results['missed'] + '</li>';
 
 					if(results['congruent_rts'].length>0) {
-						resultstring += '<li>Average congruent reaction time: ' + Math.twodec(Math.avg(results['congruent_rts'])) + '</li>';
+						resultstring += '<li>Durchschnittliche Reaktionszeit bei Übereinstimmung: ' + Math.twodec(Math.avg(results['congruent_rts'])) + '</li>';
 					}
 					if(results['incongruent_rts'].length>0) {
-						resultstring += '<li>Average incongruent reaction time: ' + Math.twodec(Math.avg(results['incongruent_rts'])) + '</li>';
+						resultstring += '<li>Durchschnittliche Reaktionszeit bei Nicht-Übereinstimmung: ' + Math.twodec(Math.avg(results['incongruent_rts'])) + '</li>';
 					}
 					resultstring += '</ul>';
 

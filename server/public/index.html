@@ -12,28 +12,28 @@
 			<header>
 				<h1>Stroop-Test</h1>
 			</header>
-			
+
 			<section class="setup">
 				<h2>Setup</h2>
 				<div class="cf">
 					<p>Vom Experimentator auszufüllen.</p>
 					<section class="first">
 						<h3>Teilnehmer-ID</h3>
-						
+
 						<input type="text" id="participant_id" required>
-							
+
 					</section>
 					<section class="second">
 						<h3>Stroop-Einstellungen</h3>
-						
+
 						<form class="list">
-							
-							<div id="divrounds">	
+
+							<div id="divrounds">
 								<label for="rounds">Anzahl der Runden: </label>
 								<select id="rounds"></select>
 							</div>
 
-							<div id="divdurations">	
+							<div id="divdurations">
 								<label for="durations">Dauer jeder Runde: </label>
 								<select id="durations"></select> Sekunden
 							</div>
@@ -46,11 +46,11 @@
 						</form>
 					</section>
 				</div>
-				
+
 				<div class="alert alert-warning" role="alert"></div>
-				
+
 				<button>Start</button>
-				
+
 			</section>
 
 			<section class="demographics">
@@ -97,26 +97,26 @@
 			<section class="instructions">
 				<h2>Anweisungen</h2>
 				<p>
-					Der Stroop-Test ist ein psychologisches Experiment, benannt nach John Ridley Stroop. Das Stroop-Phäneomen zeigt die Schwierigkeit die Farbe eines Farb-Wortes mit dessen Bedeutung zu verbinden, wenn Wort und Farbe nicht übereinstimmen, z.B. wenn das Word GRÜN mit roter Farbe geschrieben wird.
+					Beim folgenden Test werden Ihnen Farbwörter (z. B. GRÜN) in verschiedenen Schriftfarben angezeigt. Ihre Aufgabe wird es sein, zu entscheiden, ob FarbWORT und SchriftFARBE übereinstimmen.
+					<ul>
+						<li><b>Stimmt ('F')</b>: Die Farbe und Bedeutung des Wortes sind gleich (z.B., <span style="color: green">GRÜN</span>)</li>
+						<li><b>Stimmt nicht ('J')</b>: Die Farbe und Bedeutung des Wortes sind nicht gleich (z.B., <span style="color: red">GRÜN</span>)</li>
+					</ul>
 				</p>
 				<p>
-					Bei der folgenden Aufgabe wirst du farbige Worte sehen (wie <span style="color: green">GRÜN</span> oder <span style="color: red">BLAU</span>). Du musst auf die Farbe des Wortes reagieren. Wenn Farbe und Bedeutung übereinstimmen drücke <b>'f'</b>, falls Farbe und Bedeutung nicht übereinstimmen drücke <b>'j'</b>.:
-					<ul>
-						<li><b>Passt ('f')</b>: Die Farbe und Bedeutung des Wortes sind gleich (z.B., <span style="color: green">GRÜN</span>)</li>
-						<li><b>Passt nicht ('j')</b>: Die Farbe und Bedeutung des Wortes sind nicht gleich (z.B., <span style="color: red">GRÜN</span>)</li>
-					</ul>
+					Jedes Farbwort ist nur eine kurze Zeit am Bildschirm zu sehen, danach verschwindet es und das nächste erscheint. Es ist deshalb wichtig, dass Sie so schnell wie möglich antworten.
 				</p>
 				<p>
 				Die möglichen Farben sind:
 					<ul>
 						<li><span style="color: #3333ff; font-weight: bold; font-size: large">BLAU</span></li>
-						<li><span style="color: #ffff00; font-weight: bold; font-size: large">GELB</span></li>
+						<li><span style="color: #ffdd00; font-weight: bold; font-size: large">GELB</span></li>
 						<li><span style="color: #009933; font-weight: bold; font-size: large">GRÜN</span></li>
 						<li><span style="color: #ff9900; font-weight: bold; font-size: large">ORANGE</span></li>
 						<li><span style="color: #ff0000; font-weight: bold; font-size: large">ROT</span></li>
 						<li><span style="color: #000000; font-weight: bold; font-size: large">SCHWARZ</span></li>
 				</p>
-				<p>Verstanden? Verstanden? Los!</p>
+				<p>Alles verstanden? Dann drücke auf Start!</p>
 				<button>Start</button>
 			</section>
 
@@ -129,7 +129,7 @@
 			</section>
 
 			<section class="stroop">
-				
+
 				<p id="counter"></p>
 				<div id="progressbar"></div>
 				<p id="text_canvas"></p>
