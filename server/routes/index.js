@@ -101,10 +101,11 @@ router.post('/', function(req, res, next) {
         });
 
 				fs.exists(logfile_nojson, function(exists) {
-				  	var line_header_nojson = 'participant_id;speed;duration;rounds;current_round;variant;hits;false_positives;false_negatives;missed;congruent_mean;incongruent_mean;congruent_rts;incongruent_rts;status;time;timestamp' +	NEWLINE;
+				  	var line_header_nojson = 'participant_id;round_start_time;speed;duration;rounds;current_round;variant;hits;false_positives;false_negatives;missed;congruent_mean;incongruent_mean;congruent_rts;incongruent_rts;status;time;timestamp' +	NEWLINE;
 						var datum = new Date();
 						var line_nojson =
 															req.body['settings']['participant_id'] + ';' +
+															req.body['settings']['round_start_time'] + ';' +
 															req.body['settings']['speed'] + ';' +
 															req.body['settings']['duration'] + ';' +
 															req.body['settings']['rounds'] + ';' +

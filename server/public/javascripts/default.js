@@ -5,7 +5,7 @@ $(document).ready(function() {
 	// [ ] prevent same subsequent color pairs
 
 	/* constants & variables */
-	const VERSION = '1.1'; 						// to keep track of changes affecting log file format
+	const VERSION = '1.2'; 						// to keep track of changes affecting log file format
 	const DEBUG = false;
 
 	const STATUS_COMPLETE = 'complete';			// indicates complete dataset on server
@@ -18,8 +18,8 @@ $(document).ready(function() {
 	const PROGRESS_FRAMERATE = 100; 				// ms
 	const KEYCODE_YES = 102;						// f
 	const KEYCODE_NO = 106;							// j
-	const TIME_TO_WAIT = 17000;						//time between rounds in ms, minus 3 seconds for the countdown screen
-	const ROUND_DURATION = 30000;				// duration of one round
+	const TIME_TO_WAIT = 7000;						//time between rounds in ms, minus 3 seconds for the countdown screen
+	const ROUND_DURATION = 10000;				// duration of one round
 
 	// Farben in deutsch
 	const COLORS = [
@@ -247,6 +247,7 @@ $(document).ready(function() {
 	function start_stroop() {
 
 		var canvas = $('#text_canvas');
+		round_start_time = Date.now();
 
 		clearInterval(progressbar_timer);
 
@@ -290,6 +291,7 @@ $(document).ready(function() {
 			console.log(results);
 			console.log(results_summary);
 			// log partial results
+			settings['round_start_time'] = round_start_time;
 			settings['current_round'] = current_round;
 			log_partial_data();
 			results_summary['hits'] = results_summary['hits'] + results['hits'];
@@ -337,6 +339,7 @@ $(document).ready(function() {
 				results = results_summary;
 				console.log(results);
 				// log final results
+				settings['round_start_time'] = 'summary';
 				settings['speed'] = 'summary';
 				settings['current_round'] = 'summary';
 				log_final_results();
